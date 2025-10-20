@@ -40,6 +40,25 @@ app.get('/api/users', (req, res) =>{
         res.json(results);
     });
 });
+app.post('/api/users', (req, res) => {
+    const { name, nim, kelas } = req.body;
+
+    if (!name || !nim || !kelas) {
+        return res.status(400).json({message: "Nama, NIM dan Kelas wajib diisi."});
+    }
+
+    db.query(
+        "INSERT INTO users (name, nim, kelas) VALUES (?, ?, ?)",
+        [name, nim, kelas],
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'Database error'});
+            }
+            res.status(201).json({ message: "User added successfully" });
+        }
+    )
+});
 
 app.put('/api/users/:id', (req, res) => {
     const userId = req.params.id;
@@ -57,7 +76,16 @@ app.put('/api/users/:id', (req, res) => {
     )
 });
 
-
+app.delete('/api/users/:id', (req, res) => {
+    const userId = req.params.id;
+    db.query('DELETE FROM users WHERE id = ?', [userId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json({ message: 'User deleted successfully' });
+    })
+});
 
 
 
