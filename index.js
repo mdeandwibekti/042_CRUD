@@ -30,4 +30,14 @@ db.connect((err) => {
     console.log('Connected successfully.');
 });
 
+app.get('/api/users', (req, res) =>{
+    db.query = ('SELECT" * FROM users', (err, stack) => {
+        if (err) {
+            console.error('Error executing query:' + err,stack);
+            res.status(500).send('error ferching users');
+            return;
+        }
+        res.json(results);
+    });
+});
 
